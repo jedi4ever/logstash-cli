@@ -1,5 +1,7 @@
 require 'date'
 
+require 'yajl/json_gem'
+
 module LogstashCli::Command
 
   def _grep(pattern,options)
@@ -8,6 +10,8 @@ module LogstashCli::Command
 
     from = options[:from]
     to  = options[:to]
+    metafields = options[:meta].split(',')
+    fields = options[:fields].split(',')
 
     begin
       unless options[:last].nil?
@@ -21,24 +25,22 @@ module LogstashCli::Command
       from_date = Date.parse(from)
       to_date = Date.parse(to)
     rescue Exception => ex
-      puts "Something went wrong while parsing the dates: currently only dates are supported with last. Be sure to add the suffix 'd' "+ex
+      $stderr.puts "Something went wrong while parsing the dates: currently only dates are supported with last. Be sure to add the suffix 'd' "+ex
       exit -1
     end
+
+    $stderr.puts "Searching #{es_url}[#{index_prefix}#{from_date}..#{index_prefix}#{to_date}] - #{pattern}"
 
     (from_date..to_date).to_a.each do |date|
       es_index = index_prefix+date.to_s.gsub('-','.')
 
       result_size = options[:size]
-      puts "Searching #{es_url}[#{es_index}] - #{pattern}"
 
       begin
         Tire.configure {url es_url}
         search = Tire.search(es_index) do
           query do
             string "#{pattern}"
-            #must { string "facility:#{opts[:facility]}" } unless opts[:facility].nil?
-            #must { string "_logger:#{opts[:class_name]}" } unless opts[:class_name].nil?
-            #must { string "full_message:Exception*" } if opts[:exceptions]
           end
           sort do
             by :@timestamp, 'desc'
@@ -46,30 +48,34 @@ module LogstashCli::Command
           size result_size
         end
       rescue Exception => e
-        puts e
-        puts "\nSomething went wrong with the search. This is usually due to lucene query parsing of the 'grep' option"
+        $stderr.puts e
+        $stderr.puts "\nSomething went wrong with the search. This is usually due to lucene query parsing of the 'grep' option"
         exit
       end
 
-      require 'pp'
       begin
+        result = Array.new
         search.results.sort {|a,b| a[:@timestamp] <=> b[:@timestamp] }.each do |res|
 
-          pp res
-          # service = res[:@fields][:facility]
-          # class_name = res[:@fields][:_logger]
-          # file = res[:@fields][:file]
-          # #msg = res[:@fields][:full_message]
-          # msg = res[:@fields][:message]
-          tstamp = Time.iso8601(res[:@timestamp]).localtime.iso8601
-          # fields = opts[:fields] || ["tstamp", "service", "msg"]
-          # vals = fields.map {|x| x == fields[0] ? "\\e[1m[#{eval(x)}]\\e[0m" : eval(x)}
-          # display = vals.join(" - ")
-          # puts display
+          metafields.each do |metafield|
+            result << res["@#{metafield}".to_sym]
+          end
 
+          fields.each do |field|
+            result << res[:@fields][field.to_sym]
+          end
+
+          output = case options[:format]
+            when 'csv' then result.to_csv({:col_sep => options[:delim]})
+            when 'json' then result.to_json
+          end
+          #tstamp = Time.iso8601(res[:@timestamp]).localtime.iso8601
+
+          puts output
+          result = []
         end
       rescue ::Tire::Search::SearchRequestFailed => e
-        puts e.message
+        $stderr.puts e.message
       end
     end
   end

@@ -19,6 +19,9 @@ module LogstashCli
     method_option :format , :default => 'csv', :desc => "Format to use for exporting"
     method_option :size , :default => 500, :desc => "Number of results to return"
     method_option :last , :default => nil, :desc => "Specify period since now f.i. 1d"
+    method_option :meta , :default => "type,message", :desc => "Meta Logstash fields to show"
+    method_option :fields , :default => "message,program", :desc => "Logstash Fields to show"
+    method_option :delim , :default => "|", :desc => "csv delimiter"
     def grep(pattern)
       _grep(pattern,options)
     end
