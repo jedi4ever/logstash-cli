@@ -12,10 +12,10 @@ Installation using the usual steps
 
 Install rvm , (no gem yet)
 
-$ git clone thisrepo
-$ cd thisrepo
-$ gem install bundler
-$ bundle install
+    $ git clone thisrepo
+    $ cd thisrepo
+    $ gem install bundler
+    $ bundle install
 
 ## Usage
 
