@@ -31,10 +31,18 @@ module LogstashCli::Command
 
     $stderr.puts "Searching #{es_url}[#{index_prefix}#{from_date}..#{index_prefix}#{to_date}] - #{pattern}"
 
-    (from_date..to_date).to_a.each do |date|
-      es_index = index_prefix+date.to_s.gsub('-','.')
+    # Total of results to show
+    total_result_size = options[:size]
 
-      result_size = options[:size]
+    # For this index the number of results to show
+    # Previous indexes might already have generate results
+
+    running_result_size = total_result_size.to_i
+
+    # We reverse the order of working ourselves through the index
+    (from_date..to_date).sort.reverse.to_a.each do |date|
+
+      es_index = index_prefix+date.to_s.gsub('-','.')
 
       begin
         Tire.configure {url es_url}
@@ -45,7 +53,7 @@ module LogstashCli::Command
           sort do
             by :@timestamp, 'desc'
           end
-          size result_size
+          size running_result_size
         end
       rescue Exception => e
         $stderr.puts e
@@ -55,6 +63,10 @@ module LogstashCli::Command
 
       begin
         result = Array.new
+
+        # Decrease the number of results to get from the next index
+        running_result_size -= search.results.size
+
         search.results.sort {|a,b| a[:@timestamp] <=> b[:@timestamp] }.each do |res|
 
           metafields.each do |metafield|
@@ -66,9 +78,9 @@ module LogstashCli::Command
           end
 
           output = case options[:format]
-            when 'csv' then result.to_csv({:col_sep => options[:delim]})
-            when 'json' then result.to_json
-          end
+                   when 'csv' then result.to_csv({:col_sep => options[:delim]})
+                   when 'json' then result.to_json
+                   end
           #tstamp = Time.iso8601(res[:@timestamp]).localtime.iso8601
 
           puts output
