@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "tire"
   s.add_dependency "thor"
-#  s.add_dependency "amqp"
+  s.add_dependency "amqp"
   s.add_dependency "rack"
   s.add_dependency "yajl-ruby"
   s.add_dependency "fastercsv"
