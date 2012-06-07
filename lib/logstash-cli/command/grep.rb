@@ -2,7 +2,7 @@ require 'date'
 
 require 'yajl/json_gem'
 
-module LogstashCli::Command
+module Grep
 
   def _grep(pattern,options)
     es_url = options[:esurl]

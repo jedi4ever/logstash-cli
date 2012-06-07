@@ -1,10 +1,11 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'rack'
+require 'amqp'
 require 'tire'
 require 'time'
 require 'fastercsv'
-require 'logstash-cli/command/grep'
+require 'logstash-cli/command'
 
 module LogstashCli
   class CLI < Thor
@@ -24,6 +25,18 @@ module LogstashCli
     method_option :delim , :default => "|", :desc => "csv delimiter"
     def grep(pattern)
       _grep(pattern,options)
+    end
+
+    desc "tail", "Stream a live feed via AMQP"
+    method_option :amqpurl, :default => 'amqp://logstash:foopass@localhost:5672', :desc => "URL to connect to AMQP"
+    method_option :exchange, :default => 'rawlogs', :desc => "Exchange name"
+    method_option :key, :default => '#', :desc => "Routing key"
+    method_option :format , :default => 'csv', :desc => "Format to use for exporting"
+    method_option :meta, :default => "timestamp,type,message", :desc => "Meta Logstash fields to show"
+    method_option :delim, :default => "|", :desc => "csv delimiter"
+
+    def tail()
+      _tail(options)
     end
 
   end
