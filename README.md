@@ -33,6 +33,8 @@ Mucho inspired by a gist of the eminent @lusis - <https://gist.github.com/138807
 
 ## Commandline Options
 
+### Grep
+
     Usage:
       logstash-cli grep PATTERN
 
@@ -59,15 +61,37 @@ Mucho inspired by a gist of the eminent @lusis - <https://gist.github.com/138807
 
     Search logstash for a pattern
 
+### Tail
+
+    Usage:
+      logstash-cli tail
+
+    Options:
+      [--meta=META]          # Meta Logstash fields to show
+                             # Default: timestamp,type,message
+      [--delim=DELIM]        # csv delimiter
+                             # Default: |
+      [--key=KEY]            # Routing key
+                             # Default: #
+      [--format=FORMAT]      # Format to use for exporting
+                             # Default: csv
+      [--amqpurl=AMQPURL]    # URL to connect to AMQP
+                             # Default: amqp://localhost:5672
+      [--exchange=EXCHANGE]  # Exchange name
+                             # Default: rawlogs
+
+    Stream a live feed via AMQP
+
 ## Examples
 
     $ logstash-cli grep --esurl="http://logger-1.jedi.be:9200" '@message:jedi4ever AND program:sshd' --last 5d --format csv --delim ':'
+
+    $ logstash-cli tail --amqpurl="amqp://logger-1.jedi.be:5672" --key="program.sshd"
 
 ## TODO
 
 - find a way to query existing instances
 - specify last 15m 
 - find a way to get the results by streaming instead of loading all in memory (maybe pagination will help here)
-- live tailing the output
 - produce ascii histograms
 - or sparklines
