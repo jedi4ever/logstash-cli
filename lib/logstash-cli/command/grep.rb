@@ -80,6 +80,7 @@ module Grep
           output = case options[:format]
                    when 'csv' then result.to_csv({:col_sep => options[:delim]})
                    when 'json' then result.to_json
+                   when 'plain' then result.join(options[:delim])
                    end
           #tstamp = Time.iso8601(res[:@timestamp]).localtime.iso8601
 
