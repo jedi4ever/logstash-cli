@@ -76,7 +76,7 @@ Mucho inspired by a gist of the eminent @lusis - <https://gist.github.com/138807
       [--format=FORMAT]      # Format to use for exporting
                              # Default: csv
       [--amqpurl=AMQPURL]    # URL to connect to AMQP
-                             # Default: amqp://localhost:5672
+                             # Default: amqp://logstash:foopass@localhost:5672
       [--exchange=EXCHANGE]  # Exchange name
                              # Default: rawlogs
 
