@@ -63,40 +63,40 @@ Mucho inspired by a gist of the eminent @lusis - <https://gist.github.com/138807
 
 ### Tail
 
-Usage:
-  logstash-cli tail
+    Usage:
+      logstash-cli tail
 
-Options:
-      [--host=HOST]                    # Host to connect to AMQP
-                                       # Default: localhost
-  --amqpurl, [--url=URL]               # Alternate way to specify settings via an AMQP Url f.i. amqp://logstash:foopass@localhost:5672. 
- This takes precendence over other settings. Note that username and password need to be percentage encoded(URL encoded) in case of special characters
-      [--auto-delete]                  # Autodelete Exchange or not
-      [--vhost=VHOST]                  # VHost to connect to AMQP
-                                       # Default: /
-      [--persistent]                   # Persistent Exchange or not
-      [--ssl]                          # Enable SSL to connect to AMQP
-      [--user=USER]                    # User to connect to AMQP
-                                       # Default: logstash
-      [--meta=META]                    # Meta Logstash fields to show
-                                       # Default: timestamp,type,message
-      [--format=FORMAT]                # Format to use for exporting (plain,csv,json)
-                                       # Default: csv
-      [--key=KEY]                      # Routing key
-                                       # Default: #
-      [--port=PORT]                    # Port to connect to AMQP
-                                       # Default: 5672
-      [--exchange=EXCHANGE]            # Exchange name
-                                       # Default: rawlogs
-      [--password=PASSWORD]            # Password to connect to AMQP
-                                       # Default: foo
-      [--delim=DELIM]                  # csv delimiter
-                                       # Default: |
-      [--exchange-type=EXCHANGE_TYPE]  # Exchange Type
-                                       # Default: direct
-      [--durable]                      # Durable Exchange or not
+    Options:
+          [--host=HOST]                    # Host to connect to AMQP
+                                           # Default: localhost
+      --amqpurl, [--url=URL]               # Alternate way to specify settings via an AMQP Url f.i. amqp://logstash:foopass@localhost:5672. 
+     This takes precendence over other settings. Note that username and password need to be percentage encoded(URL encoded) in case of special characters
+          [--auto-delete]                  # Autodelete Exchange or not
+          [--vhost=VHOST]                  # VHost to connect to AMQP
+                                           # Default: /
+          [--persistent]                   # Persistent Exchange or not
+          [--ssl]                          # Enable SSL to connect to AMQP
+          [--user=USER]                    # User to connect to AMQP
+                                           # Default: logstash
+          [--meta=META]                    # Meta Logstash fields to show
+                                           # Default: timestamp,type,message
+          [--format=FORMAT]                # Format to use for exporting (plain,csv,json)
+                                           # Default: csv
+          [--key=KEY]                      # Routing key
+                                           # Default: #
+          [--port=PORT]                    # Port to connect to AMQP
+                                           # Default: 5672
+          [--exchange=EXCHANGE]            # Exchange name
+                                           # Default: rawlogs
+          [--password=PASSWORD]            # Password to connect to AMQP
+                                           # Default: foo
+          [--delim=DELIM]                  # csv delimiter
+                                           # Default: |
+          [--exchange-type=EXCHANGE_TYPE]  # Exchange Type
+                                           # Default: direct
+          [--durable]                      # Durable Exchange or not
 
-Stream a live feed via AMQP
+    Stream a live feed via AMQP
 
 
 ## Examples
