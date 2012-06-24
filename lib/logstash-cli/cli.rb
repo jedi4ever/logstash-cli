@@ -29,8 +29,19 @@ module LogstashCli
     end
 
     desc "tail", "Stream a live feed via AMQP"
-    method_option :amqpurl, :default => 'amqp://logstash:foopass@localhost:5672', :desc => "URL to connect to AMQP"
+    method_option :url,  :desc => "Alternate way to specify settings via an AMQP Url f.i. amqp://logstash:foopass@localhost:5672. \n This takes precendence over other settings. Note that username and password need to be percentage encoded(URL encoded) in case of special characters",:aliases => "\--amqpurl"
+    method_option :user, :default => 'logstash', :desc => "User to connect to AMQP"
+    method_option :password, :default => 'foo', :desc => "Password to connect to AMQP"
+    method_option :vhost, :default => '/', :desc => "VHost to connect to AMQP"
+    method_option :port, :default => 5672, :desc => "Port to connect to AMQP"
+    method_option :host, :default => 'localhost' , :desc => "Host to connect to AMQP"
+    method_option :ssl, :default => false , :desc => "Enable SSL to connect to AMQP", :type => :boolean
+
     method_option :exchange, :default => 'rawlogs', :desc => "Exchange name"
+    method_option :exchange_type, :default => 'direct', :desc => "Exchange Type"
+    method_option :durable, :default => false, :desc => "Durable Exchange or not", :type => :boolean
+    method_option :auto_delete, :default => false, :desc => "Autodelete Exchange or not" , :type => :boolean
+    method_option :persistent, :default => false, :desc => "Persistent Exchange or not", :type => :boolean
     method_option :key, :default => '#', :desc => "Routing key"
     method_option :format , :default => 'csv', :desc => "Format to use for exporting (plain,csv,json)"
     method_option :meta, :default => "timestamp,type,message", :desc => "Meta Logstash fields to show"
