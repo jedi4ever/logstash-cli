@@ -4,7 +4,11 @@ require 'rack'
 require 'amqp'
 require 'tire'
 require 'time'
-require 'fastercsv'
+if RUBY_VERSION > '1.9'
+  require 'csv'
+else
+  require 'fastercsv'
+end
 require 'logstash-cli/command'
 
 module LogstashCli
