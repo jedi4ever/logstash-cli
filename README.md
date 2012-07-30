@@ -46,13 +46,13 @@ Mucho inspired by a gist of the eminent @lusis - <https://gist.github.com/138807
       [--meta=META]                  # Meta Logstash fields to show
                                      # Default: type,message
       [--to=TO]                      # End date
-                                     # Default: 2012-05-11
+                                     # Default: Today in YYYY-MM-DD form
       [--delim=DELIM]                # plain or csv delimiter
                                      # Default: |
       [--format=FORMAT]              # Format to use for exporting
                                      # Default: csv
       [--from=FROM]                  # Begin date
-                                     # Default: 2012-05-11
+                                     # Default: Today in YYYY-MM-DD form
       [--size=SIZE]                  # Number of results to return
                                      # Default: 500
       [--esurl=ESURL]                # URL to connect to elasticsearch
