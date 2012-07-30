@@ -46,13 +46,13 @@ Mucho inspired by a gist of the eminent @lusis - <https://gist.github.com/138807
       [--meta=META]                  # Meta Logstash fields to show
                                      # Default: type,message
       [--to=TO]                      # End date
-                                     # Default: 2012-05-11
-      [--delim=DELIM]                # csv delimiter
+                                     # Default: Today in YYYY-MM-DD form
+      [--delim=DELIM]                # plain or csv delimiter
                                      # Default: |
       [--format=FORMAT]              # Format to use for exporting
                                      # Default: csv
       [--from=FROM]                  # Begin date
-                                     # Default: 2012-05-11
+                                     # Default: Today in YYYY-MM-DD form
       [--size=SIZE]                  # Number of results to return
                                      # Default: 500
       [--esurl=ESURL]                # URL to connect to elasticsearch
@@ -90,7 +90,7 @@ Mucho inspired by a gist of the eminent @lusis - <https://gist.github.com/138807
                                            # Default: rawlogs
           [--password=PASSWORD]            # Password to connect to AMQP
                                            # Default: foo
-          [--delim=DELIM]                  # csv delimiter
+          [--delim=DELIM]                  # plain or csv delimiter
                                            # Default: |
           [--exchange-type=EXCHANGE_TYPE]  # Exchange Type
                                            # Default: direct
@@ -98,12 +98,42 @@ Mucho inspired by a gist of the eminent @lusis - <https://gist.github.com/138807
 
     Stream a live feed via AMQP
 
+### Count
+
+    Usage:
+      logstash-cli count PATTERN --countfield=COUNTFIELD
+
+    Options:
+      [--meta=META]                  # Meta Logstash fields to show
+      [--last=LAST]                  # Specify period since now f.i. 1d
+      [--from=FROM]                  # Begin date
+                                     # Default: Today in YYYY-MM-DD form
+      [--delim=DELIM]                # plain or csv delimiter
+                                     # Default: |
+      --countfield=COUNTFIELD        # Logstash field to count
+      [--countsize=COUNTSIZE]        # Number of most frequent values to return
+                                     # Default: 50
+      [--format=FORMAT]              # Format to use for exporting (plain,csv,json)
+                                     # Default: csv
+      [--to=TO]                      # End date
+                                     # Default: Today in YYYY-MM-DD form
+      [--fields=FIELDS]              # Logstash fields to show
+      [--size=SIZE]                  # Number of results per index to show
+                                     # Default: 10
+      [--esurl=ESURL]                # URL to connect to elasticsearch
+                                     # Default: http://localhost:9200
+      [--index-prefix=INDEX_PREFIX]  # Logstash index prefix
+                                     # Default: logstash-
+
+    Return most frequent values of a field within a pattern and optionally show associated fields
 
 ## Examples
 
     $ logstash-cli grep --esurl="http://logger-1.jedi.be:9200" '@message:jedi4ever AND program:sshd' --last 5d --format csv --delim ':'
 
     $ logstash-cli tail --amqpurl="amqp://logger-1.jedi.be:5672" --key="program.sshd"
+
+    $ logstash-cli count --esurl="http://logger-1.jedi.be:9200" '@message:jedi4ever' --countfield=program
 
 ## TODO
 
