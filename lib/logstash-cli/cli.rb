@@ -49,7 +49,7 @@ module LogstashCli
     method_option :key, :default => '#', :desc => "Routing key"
     method_option :format , :default => 'plain', :desc => "Format to use for exporting (plain,csv,json)"
     method_option :meta, :default => "timestamp,type,message", :desc => "Meta Logstash fields to show"
-    method_option :delim, :default => "|", :desc => "csv delimiter"
+    method_option :delim, :default => "|", :desc => "plain or csv delimiter"
 
     def tail()
       _tail(options)

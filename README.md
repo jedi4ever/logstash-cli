@@ -47,7 +47,7 @@ Mucho inspired by a gist of the eminent @lusis - <https://gist.github.com/138807
                                      # Default: type,message
       [--to=TO]                      # End date
                                      # Default: 2012-05-11
-      [--delim=DELIM]                # csv delimiter
+      [--delim=DELIM]                # plain or csv delimiter
                                      # Default: |
       [--format=FORMAT]              # Format to use for exporting
                                      # Default: csv
@@ -90,7 +90,7 @@ Mucho inspired by a gist of the eminent @lusis - <https://gist.github.com/138807
                                            # Default: rawlogs
           [--password=PASSWORD]            # Password to connect to AMQP
                                            # Default: foo
-          [--delim=DELIM]                  # csv delimiter
+          [--delim=DELIM]                  # plain or csv delimiter
                                            # Default: |
           [--exchange-type=EXCHANGE_TYPE]  # Exchange Type
                                            # Default: direct
