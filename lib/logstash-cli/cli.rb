@@ -55,5 +55,23 @@ module LogstashCli
       _tail(options)
     end
 
+    desc "count PATTERN", "Return most frequent values of a field within a pattern and optionally show associated fields"
+    method_option :esurl , :default => 'http://localhost:9200', :desc => "URL to connect to elasticsearch"
+    method_option :index_prefix , :default => "logstash-", :desc => "Logstash index prefix"
+    method_option :from , :default => "#{Time.now.strftime('%Y-%m-%d')}", :desc => "Begin date"
+    method_option :to, :default => "#{Time.now.strftime('%Y-%m-%d')}", :desc => "End date"
+    method_option :format , :default => 'csv', :desc => "Format to use for exporting (plain,csv,json)"
+    method_option :size , :default => 10, :desc => "Number of results per index to show"
+    method_option :last , :default => nil, :desc => "Specify period since now f.i. 1d"
+    method_option :meta , :default => "", :desc => "Meta Logstash fields to show"
+    method_option :fields , :default => "", :desc => "Logstash fields to show"
+    method_option :countfield , :required => true, :desc => "Logstash field to count"
+    method_option :countsize , :default => 50, :desc => "Number of most frequent values to return"
+    method_option :delim , :default => "|", :desc => "plain or csv delimiter"
+
+    def count(pattern)
+      _count(pattern,options)
+    end
+
   end
 end

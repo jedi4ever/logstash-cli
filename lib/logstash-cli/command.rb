@@ -1,10 +1,12 @@
 require 'logstash-cli/command/grep'
 require 'logstash-cli/command/tail'
+require 'logstash-cli/command/count'
 
 module LogstashCli
   module Command
     include Grep
     include Tail
+    include Count
 
     def _format(result,options)
       output = case options[:format]
