@@ -100,32 +100,32 @@ Mucho inspired by a gist of the eminent @lusis - <https://gist.github.com/138807
 
 ### Count
 
-Usage:
-  logstash-cli count PATTERN --countfield=COUNTFIELD
+    Usage:
+      logstash-cli count PATTERN --countfield=COUNTFIELD
 
-Options:
-  [--meta=META]                  # Meta Logstash fields to show
-  [--last=LAST]                  # Specify period since now f.i. 1d
-  [--from=FROM]                  # Begin date
-                                 # Default: Today in YYYY-MM-DD form
-  [--delim=DELIM]                # plain or csv delimiter
-                                 # Default: |
-  --countfield=COUNTFIELD        # Logstash field to count
-  [--countsize=COUNTSIZE]        # Number of most frequent values to return
-                                 # Default: 50
-  [--format=FORMAT]              # Format to use for exporting (plain,csv,json)
-                                 # Default: csv
-  [--to=TO]                      # End date
-                                 # Default: Today in YYYY-MM-DD form
-  [--fields=FIELDS]              # Logstash fields to show
-  [--size=SIZE]                  # Number of results per index to show
-                                 # Default: 10
-  [--esurl=ESURL]                # URL to connect to elasticsearch
-                                 # Default: http://localhost:9200
-  [--index-prefix=INDEX_PREFIX]  # Logstash index prefix
-                                 # Default: logstash-
+    Options:
+      [--meta=META]                  # Meta Logstash fields to show
+      [--last=LAST]                  # Specify period since now f.i. 1d
+      [--from=FROM]                  # Begin date
+                                     # Default: Today in YYYY-MM-DD form
+      [--delim=DELIM]                # plain or csv delimiter
+                                     # Default: |
+      --countfield=COUNTFIELD        # Logstash field to count
+      [--countsize=COUNTSIZE]        # Number of most frequent values to return
+                                     # Default: 50
+      [--format=FORMAT]              # Format to use for exporting (plain,csv,json)
+                                     # Default: csv
+      [--to=TO]                      # End date
+                                     # Default: Today in YYYY-MM-DD form
+      [--fields=FIELDS]              # Logstash fields to show
+      [--size=SIZE]                  # Number of results per index to show
+                                     # Default: 10
+      [--esurl=ESURL]                # URL to connect to elasticsearch
+                                     # Default: http://localhost:9200
+      [--index-prefix=INDEX_PREFIX]  # Logstash index prefix
+                                     # Default: logstash-
 
-Return most frequent values of a field within a pattern and optionally show associated fields
+    Return most frequent values of a field within a pattern and optionally show associated fields
 
 ## Examples
 
