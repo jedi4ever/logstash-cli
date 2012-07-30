@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email       = ["patrick.debois@jedi.be"]
   s.homepage    = "http://github.com/jedi4ever/logstash-cli/"
   s.summary     = %q{CLI interface to logstash}
-  s.description = %q{CLI inteface to logstash}
+  s.description = %q{CLI interface to logstash}
 
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "logstash-cli"
