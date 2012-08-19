@@ -26,9 +26,9 @@ module Tail
                   :user => amqp_user, :password => amqp_password ,
                   :ssl => amqp_ssl }
 
-      # Aqmp url can override settings
+      # Amqp url can override settings
       unless amqp_url.nil?
-        settings = aqmp_url
+        settings = amqp_url
       end
 
       AMQP.start(settings) do |connection, open_ok|
