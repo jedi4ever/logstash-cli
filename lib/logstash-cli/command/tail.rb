@@ -32,6 +32,8 @@ module Tail
       end
 
       AMQP.start(settings) do |connection, open_ok|
+        trap("INT") { puts "Shutting down..."; connection.close { EM.stop }; exit }
+
         channel = AMQP::Channel.new(connection, :auto_recovery => true)
 
         channel.queue("", :auto_delete => auto_delete, :peristent => persistent , :durable => durable)   do |queue, declare_ok|
@@ -52,10 +54,9 @@ module Tail
     rescue AMQP::PossibleAuthenticationFailureError => ex
       puts "Possible Authentication error:\nthe AMQP connection URL used is #{amqp_url}\n\nDetail Info:\n#{ex}"
       exit -1
-    rescue Exception => ex
-      puts "Error occured: #{ex}"
+    rescue StandardError => ex
+      puts "Error occurred: #{ex}"
       exit -1
     end
-    trap("INT") { puts "Shutting down..."; connection.close { EM.stop };exit }
   end
 end
