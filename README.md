@@ -25,6 +25,10 @@ Mucho inspired by a gist of the eminent @lusis - <https://gist.github.com/138807
 
 ### Using the Gem
 
+    # If you no rvm
+    $ bundle exec bin/logstash-cli
+
+    # If you have rvm , there is an alias in .rvmrc
     $ logstash-cli
 
 ### Using the Github version - through bundler
