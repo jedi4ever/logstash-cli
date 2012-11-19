@@ -36,7 +36,7 @@ module Tail
 
         channel = AMQP::Channel.new(connection, :auto_recovery => true)
 
-        channel.queue("", :auto_delete => auto_delete, :peristent => persistent , :durable => durable)   do |queue, declare_ok|
+        channel.queue("", :auto_delete => auto_delete, :persistent => persistent , :durable => durable)   do |queue, declare_ok|
           queue.bind(exchange_name, :routing_key => routing_key)
           queue.subscribe do |payload|
             parsed_message = JSON.parse(payload)
