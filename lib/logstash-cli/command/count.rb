@@ -65,7 +65,8 @@ module Count
         puts _format(header, options)
 
         results['terms'].each do |terms|
-          puts _format(terms.values, options)
+          result = [ terms['term'], terms['count'] ]
+          puts _format(result, options)
 
           unless fields.empty? and metafields.empty?
             term = terms['term']
