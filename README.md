@@ -50,18 +50,18 @@ Mucho inspired by a gist of the eminent @lusis - <https://gist.github.com/138807
       [--meta=META]                  # Meta Logstash fields to show
                                      # Default: type,message
       [--to=TO]                      # End date
-                                     # Default: Today in YYYY-MM-DD form
+                                     # Default: Today in YYYY-MM-DD HH:MM:SS form (the time is optional)
       [--delim=DELIM]                # plain or csv delimiter
                                      # Default: |
       [--format=FORMAT]              # Format to use for exporting
                                      # Default: csv
       [--from=FROM]                  # Begin date
-                                     # Default: Today in YYYY-MM-DD form
+                                     # Default: Today in YYYY-MM-DD HH:MM:SS form (the time is optional)
       [--size=SIZE]                  # Number of results to return
                                      # Default: 500
       [--esurl=ESURL]                # URL to connect to elasticsearch
                                      # Default: http://localhost:9200
-      [--last=LAST]                  # Specify period since now f.i. 1d
+      [--last=LAST]                  # Specify period since now (Examples: 10min, 3hrs, 4days, 1wk, 1yr)
 
     Search logstash for a pattern
 
@@ -142,7 +142,6 @@ Mucho inspired by a gist of the eminent @lusis - <https://gist.github.com/138807
 ## TODO
 
 - find a way to query existing instances
-- specify last 15m 
 - find a way to get the results by streaming instead of loading all in memory (maybe pagination will help here)
 - produce ascii histograms
 - or sparklines
