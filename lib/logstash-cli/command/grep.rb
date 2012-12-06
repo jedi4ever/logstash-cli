@@ -4,32 +4,60 @@ require 'yajl/json_gem'
 
 module Grep
 
+  def self.indexes_from_interval(from, to)
+    (from.to_date..to.to_date).sort.map do |date|
+      date.to_s.gsub('-', '.')
+    end
+  end
+
+  # Very naive time range description parsing.
+  def self.parse_time_range(desc)
+    /(?<value>\d+)\s*(?<units>\w*)/ =~ desc
+    value = value.to_i
+    start = case units.to_s.downcase
+            when 'm', 'min', 'mins', 'minute', 'minutes'
+              DateTime.now - (value/(60*24.0))
+            when 'h', 'hr', 'hrs', 'hour', 'hours'
+              DateTime.now - (value/24.0)
+            when 'd', 'day', 'days'
+              DateTime.now - value
+            when 'w', 'wk', 'wks', 'week', 'weeks'
+              DateTime.now - (7.0*value)
+            when 'y', 'yr', 'yrs', 'year', 'years'
+              DateTime.now - (365.0*value)
+            else
+              raise ArgumentError
+            end
+    [start, DateTime.now]
+  end
+
   def _grep(pattern,options)
     es_url = options[:esurl]
     index_prefix =  options[:index_prefix]
-
-    from = options[:from]
-    to  = options[:to]
     metafields = options[:meta].split(',')
     fields = options[:fields].split(',')
 
     begin
-      unless options[:last].nil?
-        days = options[:last].match(/(\d*)d/)[1].to_i
-        to_date = Date.today
-        from_date = to_date - days
-        from = from_date.to_s
-        to = to_date.to_s
+      if options[:last].nil?
+        from_time = DateTime.parse(options[:from])
+        to_time = DateTime.parse(options[:to])
+      else
+        from_time, to_time = Grep.parse_time_range(options[:last])
       end
-
-      from_date = Date.parse(from)
-      to_date = Date.parse(to)
-    rescue Exception => ex
-      $stderr.puts "Something went wrong while parsing the dates: currently only dates are supported with last. Be sure to add the suffix 'd' "+ex
+    rescue ArgumentError
+      $stderr.puts "Something went wrong while parsing the date range."
       exit -1
     end
 
-    $stderr.puts "Searching #{es_url}[#{index_prefix}#{from_date}..#{index_prefix}#{to_date}] - #{pattern}"
+    index_range = Grep.indexes_from_interval(from_time, to_time).map do |i|
+      "#{index_prefix}#{i}"
+    end
+
+    $stderr.puts "Searching #{es_url}[#{index_range.first}..#{index_range.last}] - #{pattern}"
+
+    # Reformat time interval to match logstash's internal timestamp'
+    from = from_time.to_time.utc.strftime('%FT%T')
+    to = to_time.to_time.utc.strftime('%FT%T')
 
     # Total of results to show
     total_result_size = options[:size]
@@ -40,19 +68,17 @@ module Grep
     running_result_size = total_result_size.to_i
 
     # We reverse the order of working ourselves through the index
-    (from_date..to_date).sort.reverse.to_a.each do |date|
-
-      es_index = index_prefix+date.to_s.gsub('-','.')
-
+    index_range.reverse.each do |idx|
       begin
         Tire.configure {url es_url}
-        search = Tire.search(es_index) do
+        search = Tire.search(idx) do
           query do
             string "#{pattern}"
           end
           sort do
             by :@timestamp, 'desc'
           end
+          filter "range", "@timestamp" => { "from" => from, "to" => to}
           size running_result_size
         end
       rescue Exception => e
@@ -81,7 +107,8 @@ module Grep
           result = []
         end
       rescue ::Tire::Search::SearchRequestFailed => e
-        $stderr.puts e.message
+        # If we got a 404 it likely means we simply don't have logs for that day, not failing over necessarily.
+        $stderr.puts e.message unless search.response.code == 404
       end
     end
   end
