@@ -1,5 +1,5 @@
-require_relative '../../spec_helper.rb'
-require_relative '../../../lib/logstash-cli/command/grep.rb'
+require 'spec_helper'
+require 'logstash-cli/command/grep'
 
 describe Grep do
   it "determines index range needed for a given date range" do
