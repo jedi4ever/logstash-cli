@@ -12,7 +12,8 @@ module Grep
 
   # Very naive time range description parsing.
   def self.parse_time_range(desc)
-    /(?<value>\d+)\s*(?<units>\w*)/ =~ desc
+    /(\d+)\s*(\w*)/ =~ desc
+    value, units = $1, $2
     value = value.to_i
     start = case units.to_s.downcase
             when 'm', 'min', 'mins', 'minute', 'minutes'
