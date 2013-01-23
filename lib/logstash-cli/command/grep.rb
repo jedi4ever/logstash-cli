@@ -41,12 +41,14 @@ module Grep
     fields = options[:fields].split(',')
 
     begin
-      if options[:last].nil?
-        from_time = Time.parse(options[:from])
-        to_time = Time.parse(options[:to])
-      else
-        from_time, to_time = Grep.parse_time_range(options[:last])
-      end
+      from_time, to_time = if options[:from] && options[:to]
+                             [ Time.parse(options[:from]),
+                               Time.parse(options[:to]) ]
+                           elsif options[:from] && ! options[:to]
+                             [Time.parse(options[:from]), Time.now]
+                           elsif options[:last]
+                             Grep.parse_time_range(options[:last])
+                           end
     rescue ArgumentError
       $stderr.puts "Something went wrong while parsing the date range."
       exit -1
