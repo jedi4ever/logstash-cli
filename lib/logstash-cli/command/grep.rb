@@ -1,34 +1,37 @@
-require 'date'
-
+require 'time'
 require 'yajl/json_gem'
 
 module Grep
 
   def self.indexes_from_interval(from, to)
-    (from.to_date..to.to_date).sort.map do |date|
-      date.to_s.gsub('-', '.')
+    ret = []
+    while from <= to
+      ret << from.strftime("%F").gsub('-', '.')
+      from += 86400
     end
+    ret
   end
 
   # Very naive time range description parsing.
   def self.parse_time_range(desc)
-    /(?<value>\d+)\s*(?<units>\w*)/ =~ desc
+    /(\d+)\s*(\w*)/ =~ desc
+    value, units = $1, $2
     value = value.to_i
     start = case units.to_s.downcase
             when 'm', 'min', 'mins', 'minute', 'minutes'
-              DateTime.now - (value/(60*24.0))
+              Time.now - value*60
             when 'h', 'hr', 'hrs', 'hour', 'hours'
-              DateTime.now - (value/24.0)
+              Time.now - value*3600
             when 'd', 'day', 'days'
-              DateTime.now - value
+              Time.now - value*86400
             when 'w', 'wk', 'wks', 'week', 'weeks'
-              DateTime.now - (7.0*value)
+              Time.now - 7.0*value*86400
             when 'y', 'yr', 'yrs', 'year', 'years'
-              DateTime.now - (365.0*value)
+              Time.now - 365.0*value*86400
             else
               raise ArgumentError
             end
-    [start, DateTime.now]
+    [start, Time.now]
   end
 
   def _grep(pattern,options)
@@ -38,12 +41,14 @@ module Grep
     fields = options[:fields].split(',')
 
     begin
-      if options[:last].nil?
-        from_time = DateTime.parse(options[:from])
-        to_time = DateTime.parse(options[:to])
-      else
-        from_time, to_time = Grep.parse_time_range(options[:last])
-      end
+      from_time, to_time = if options[:from] && options[:to]
+                             [ Time.parse(options[:from]),
+                               Time.parse(options[:to]) ]
+                           elsif options[:from] && ! options[:to]
+                             [Time.parse(options[:from]), Time.now]
+                           elsif options[:last]
+                             Grep.parse_time_range(options[:last])
+                           end
     rescue ArgumentError
       $stderr.puts "Something went wrong while parsing the date range."
       exit -1
@@ -56,8 +61,8 @@ module Grep
     $stderr.puts "Searching #{es_url}[#{index_range.first}..#{index_range.last}] - #{pattern}"
 
     # Reformat time interval to match logstash's internal timestamp'
-    from = from_time.to_time.utc.strftime('%FT%T')
-    to = to_time.to_time.utc.strftime('%FT%T')
+    from = from_time.strftime('%FT%T')
+    to = to_time.strftime('%FT%T')
 
     # Total of results to show
     total_result_size = options[:size]
