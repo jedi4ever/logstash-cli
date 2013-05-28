@@ -100,12 +100,22 @@ module Grep
 
         search.results.sort {|a,b| a[:@timestamp] <=> b[:@timestamp] }.each do |res|
 
+          had_fields = false
           metafields.each do |metafield|
-            result << res["@#{metafield}".to_sym]
+            if metafield == 'fields' then
+              fields.each do |field|
+                result << res[:@fields][field.to_sym]
+              end
+              had_fields = true
+            else
+              result << res["@#{metafield}".to_sym]
+            end
           end
 
-          fields.each do |field|
-            result << res[:@fields][field.to_sym]
+          if !had_fields then
+            fields.each do |field|
+              result << res[:@fields][field.to_sym]
+            end
           end
 
           puts _format(result, options)
